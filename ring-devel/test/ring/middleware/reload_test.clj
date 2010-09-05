@@ -7,3 +7,6 @@
 
 (deftest wrap-reload-smoke
   (is (= :response (app :request))))
+
+(deftest wrap-reload-for-multiple-args
+  (is (= :response (app :channel :request))))

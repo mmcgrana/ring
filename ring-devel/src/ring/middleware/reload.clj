@@ -8,7 +8,7 @@
   from un-jarred source files, as apposed to source files in jars or compiled
   classes."
   [app reloadables]
-  (fn [req]
+  (fn [& args]
     (doseq [ns-sym reloadables]
       (require ns-sym :reload))
-    (app req)))
+    (apply app args)))
