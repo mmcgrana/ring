@@ -18,11 +18,13 @@
   wrapped app if such a file does not exist."
   [app ^String root-path]
   (ensure-dir root-path)
-  (fn [req]
+  (fn [req & opts]
     (if-not (= :get (:request-method req))
       (app req)
       (let [path (.substring (codec/url-decode (:uri req)) 1)]
         (or
           (response/file-response path
-            {:root root-path :index-files? true :html-files? true})
+            (into
+              {:root root-path :index-files? true :html-files? true}
+              (apply hash-map opts)))
           (app req))))))
