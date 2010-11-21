@@ -11,10 +11,10 @@
          new-loader# (java.net.URLClassLoader. (into-array [(.toURL ~dir)])
                                                original-loader#)]
      (try
-	    (.setContextClassLoader current-thread# new-loader#)
-	    ~@forms
-	    (finally 
-		  (.setContextClassLoader current-thread# original-loader#)))))
+        (.setContextClassLoader current-thread# new-loader#)
+        ~@forms
+        (finally 
+          (.setContextClassLoader current-thread# original-loader#)))))
 				
 (deftest test-redirect
   (is (= {:status 302 :headers {"Location" "http://google.com"} :body ""}
@@ -47,7 +47,7 @@
   (let [resource (java.io.File/createTempFile "response_test" nil)]
     (org.apache.commons.io.FileUtils/writeStringToFile resource "just testing") 
     (with-classloader [(.getParentFile resource)]
-      (let [resp (resource-response (str (.getName resource)))]
+      (let [resp (resource-response (.getName resource))]
         (is (= (slurp (resp :body))
               "just testing"))))))
 	
