@@ -21,7 +21,7 @@
     (fn [param-map encoded-param]
       (if-let [[_ key val] (re-matches #"([^=]+)=(.*)" encoded-param)]
         (assoc-param param-map
-          (codec/url-decode key encoding)
+          (keyword (codec/url-decode key encoding))
           (codec/url-decode (or val "") encoding))
          param-map))
     {}
