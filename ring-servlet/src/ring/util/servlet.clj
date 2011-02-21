@@ -70,7 +70,8 @@
     (.setContentType response content-type)))
 
 (defn- set-body
-  "Update a HttpServletResponse body with a String, ISeq, File or InputStream."
+  "Update a HttpServletResponse body with a String, ISeq, File,
+  InputStream or a callback fn, whose argument is responses OutputStream."
   [^HttpServletResponse response, body]
   (cond
     (string? body)
@@ -85,6 +86,10 @@
       (with-open [out (.getOutputStream response)
                   ^InputStream b body]
         (io/copy b out)
+        (.flush out))
+    (fn? body)
+      (with-open [out (.getOutputStream response)]
+        (body out)
         (.flush out))
     (instance? File body)
       (let [^File f body]
