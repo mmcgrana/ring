@@ -33,6 +33,19 @@
       [:td.source (h (source-str      elem))]
       [:td.method (h (java-method-str elem))]]))
 
+(defn- cause-partial [cause]
+  [:div#content
+    [:h3.info (h "Caused by: " (.getName (:class cause)) (:message cause))]
+    [:table.trace [:tbody
+      (map elem-partial (:trimmed-elems cause))]]])
+
+(defn- exception-partial [e]
+  (cons [:div#content
+          [:h3.info (h (str e))]
+          [:table.trace [:tbody
+            (map elem-partial (:trace-elems e-parsed))]]]
+        (map cause-partial (take-while #(not (nil? %)) (iterate :cause e-parsed)))))
+
 (defn- html-ex-view [e]
   (let [e-parsed (parse-exception e)]
     (html
@@ -42,11 +55,8 @@
           [:meta {:http-equiv "Content-Type" :content "text/html;charset=utf-8"}]
           [:title "Ring: Stacktrace"]
           [:style {:type "text/css"} css]]
-        [:body
-          [:div#content
-            [:h3.info (h (str e))]
-            [:table.trace [:tbody
-              (map elem-partial (:trace-elems e-parsed))]]]]])))
+       ~[:body
+          ~@(exception-partial e)]]))
 
 (defn- html-ex-response [e]
   (-> (response (html-ex-view e))
