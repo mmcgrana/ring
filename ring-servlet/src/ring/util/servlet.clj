@@ -72,6 +72,7 @@
 (defn- set-body
   "Update a HttpServletResponse body with a String, ISeq, File or InputStream."
   [^HttpServletResponse response, body]
+  (.setCharacterEncoding response "UTF-8")
   (cond
     (string? body)
       (with-open [writer (.getWriter response)]
