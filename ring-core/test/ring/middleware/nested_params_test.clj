@@ -15,4 +15,7 @@
         {"foo[]" "bar"}         {"foo" ["bar"]}
         {"foo[]" ["bar" "baz"]} {"foo" ["bar" "baz"]}
         {"a[x][]" ["b"], "a[x][][y]" "c"} {"a" {"x" ["b" {"y" "c"}]}}
-        {"a[][x]" "c", "a[][y]" "d"}      {"a" [{"x" "c"} {"y" "d"}]}))))
+        {"a[][x]" "c", "a[][y]" "d"}      {"a" [{"x" "c"} {"y" "d"}]}))
+    (testing "properly handle multi-valued parameters that don't end with '[]' (created by e.g., multiple select elements)"
+      (are [p r] (= (handler {:params p}) r)
+           {"foo" ["bar" "baz"]} {"foo" ["bar" "baz"]}))))

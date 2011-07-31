@@ -25,11 +25,18 @@
 
 (defn- param-pairs
   "Return a list of name-value pairs for a parameter map."
-  [params]
+  [params multi-value-suffix]
   (mapcat
     (fn [[name value]]
       (if (sequential? value)
-        (for [v value] [name v])
+        ;; If the parameter is multi-valued, but does not end with the appropriate suffix
+        ;; ("[]" in the default 'parse-nested-keys' system), it will be appended here
+        ;; to allow the rest of the middleware functions to operate on it appropriately.
+        (let [name (if-not (.endsWith (str name) multi-value-suffix)
+                     (str name multi-value-suffix)
+                     name)]
+          (for [v value]
+            [name v]))
         [[name value]]))
     params))
 
@@ -37,12 +44,12 @@
   "Takes a flat map of parameters and turns it into a nested map of
   parameters, using the function parse to split the parameter names
   into keys."
-  [params parse]
+  [params parse multi-value-suffix]
   (reduce
     (fn [m [k v]]
       (assoc-nested m (parse k) v))
     {}
-    (param-pairs params)))
+    (param-pairs params multi-value-suffix)))
 
 (defn wrap-nested-params
   "Middleware to converts a flat map of parameters into a nested map.
@@ -56,9 +63,15 @@
     => {\"foo\" {\"bar\" \"baz\"}}
 
     {\"foo[]\" \"bar\"}
-    => {\"foo\" [\"bar\"]}"
+    => {\"foo\" [\"bar\"]}
+
+  The string in the :multi-value-suffix option determines what a parameter with
+  multiple values should end in.  If a multi-valued parameter is present, but does
+  not have this suffix, it is treated as though it does.  Defaults to \"[]\",
+  corresponding to the parse-nested-keys function."
   [handler & [opts]]
   (fn [request]
     (let [parse   (:key-parser opts parse-nested-keys)
-          request (update-in request [:params] nest-params parse)]
+          multi-value-suffix (:multi-value-suffix opts "[]")
+          request (update-in request [:params] nest-params parse multi-value-suffix)]
       (handler request))))
