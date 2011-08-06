@@ -28,7 +28,7 @@
   parsing function takes one argument, the header value as a string,
   and returns an appropriate Clojure object."
   ([handler]
-     (wrap-headers handler {}))
+     (wrap-request-headers handler {}))
   ([handler parsing-rules]
      (fn [request]
        (handler
