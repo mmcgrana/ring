@@ -1,7 +1,8 @@
 (ns ring.middleware.session
   "Session manipulation."
   (:use ring.middleware.cookies
-        [ring.middleware.session store memory]))
+        [ring.middleware.session store memory])
+  (:import [java.net URLDecoder]))
 
 (defn wrap-session
   "Reads in the current HTTP session map, and adds it to the :session key on
@@ -34,7 +35,8 @@
            cookie-attrs (merge (options :cookie-attrs) {:path session-root})]
       (wrap-cookies
         (fn [request]
-          (let [sess-key (get-in request [:cookies cookie-name :value])
+          (let [sess-key (if-let [sk (get-in request [:cookies cookie-name :value])]
+                           (URLDecoder/decode sk "UTF-8"))
                 session  (read-session store sess-key)
                 request  (assoc request :session session)]
             (if-let [response (handler request)]
