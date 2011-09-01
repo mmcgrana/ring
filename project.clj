@@ -5,6 +5,7 @@
     [[ring/ring-core "0.3.11"]
      [ring/ring-devel "0.3.11"]
      [ring/ring-jetty-adapter "0.3.11"]
+     [ring/ring-finagle-adapter "0.3.11"]
      [ring/ring-servlet "0.3.11"]]
   :dev-dependencies
     [[org.clojars.weavejester/autodoc "0.9.0"]]
