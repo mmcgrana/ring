@@ -58,14 +58,17 @@
     :keystore
     :key-password
     :truststore
-    :trust-password"
+    :trust-password
+    :default-handler? - Add a Jetty handler which proxies your hander: defaults
+                        to true, set to false if you want manually configure
+                        handlers with a configurator."
   [handler options]
   (let [^Server s (create-server (dissoc options :configurator))]
     (when-let [configurator (:configurator options)]
       (configurator s))
-    (doto s
-      (.addHandler (proxy-handler handler))
-      (.start))
+    (when (:default-handler? options true)
+      (.addHandler s (proxy-handler handler)))
+    (.start s)
     (when (:join? options true)
       (.join s))
     s))

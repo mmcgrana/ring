@@ -6,3 +6,5 @@ ring-standalone.jar
 pom.xml
 autodoc
 .lein-failures
+*.iml
+.idea
