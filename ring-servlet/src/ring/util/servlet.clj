@@ -109,6 +109,8 @@
       (let [^File f body]
         (with-open [stream (FileInputStream. f)]
           (set-body response stream)))
+    (fn? body)
+      (body (.getOutputStream response))
     (nil? body)
       nil
     :else
