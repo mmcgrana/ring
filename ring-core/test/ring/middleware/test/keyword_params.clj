@@ -12,5 +12,9 @@
     {:foo  "bar" :biz  [{:bat "one"}  {:bat  "two"}]}
     {"foo" 1}
     {:foo  1}
+    {"foo" "bar" :keyword "bat"}
+    {:foo  "bar" :keyword  "bat"}
+    {"nested" {"foo" "bar" :keyword "bat"}}
+    {:nested  {:foo  "bar" :keyword "bat"}}
     {"foo" 1 "1bar" 2 "baz*" 3 "quz-buz" 4 "biz.bang" 5}
     {:foo 1 :baz* 3 :quz-buz 4}))
