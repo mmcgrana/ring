@@ -34,7 +34,7 @@ To see some working examples, first pull in Ring's dependencies using [Leiningen
 
 Add the following dependency to your project.clj:
   
-    [ring/ring-jetty-adapter "0.3.11"] ;; or latest version
+    [ring "0.3.11"] ;; or latest stable version
 
 Then run:
 
