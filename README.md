@@ -114,6 +114,8 @@ This project borrows heavily from Ruby's Rack and Python's WSGI; thanks to those
 
 ## License
 
-Copyright (c) 2009-2011 Mark McGranaghan and released under an MIT license.
+Copyright © 2009-2012 Mark McGranaghan.
+
+Distributed under the MIT License, the same as Node.js.
 
 Clojure logo by Tom Hickey.
