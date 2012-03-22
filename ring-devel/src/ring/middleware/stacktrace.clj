@@ -1,11 +1,11 @@
 (ns ring.middleware.stacktrace
   "Catch exceptions and render web and log stacktraces for debugging."
-  (:require [clojure.java.io :as io])
   (:use hiccup.core
         hiccup.page
         clj-stacktrace.core
         clj-stacktrace.repl
-        ring.util.response))
+        ring.util.response
+        ring.util.resource))
 
 (defn wrap-stacktrace-log
   "Wrap a handler such that exceptions are logged to *err* and then rethrown."
@@ -17,9 +17,6 @@
         (let [msg (str "Exception: " (pst-str ex))]
           (.println *err* msg)
           (throw ex))))))
-
-(defn- style-resource [path]
-  (html [:style {:type "text/css"} (slurp (io/resource path))]))
 
 (defn- elem-partial [elem]
   (if (:clojure elem)
