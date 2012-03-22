@@ -11,7 +11,7 @@
 (def ring-keys
   '(:server-port :server-name :remote-addr :uri :query-string :scheme
     :request-method :content-type :content-length :character-encoding
-    :headers :body))
+    :ssl-client-cert :headers :body))
 
 (defhtml req-pair
   [key req]
