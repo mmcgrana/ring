@@ -1,7 +1,8 @@
 (ns ring.adapter.test.jetty
   (:use clojure.test
         ring.adapter.jetty)
-  (:require [clj-http.client :as http]))
+  (:require [clj-http.client :as http])
+  (:import (org.eclipse.jetty.util.thread QueuedThreadPool)))
 
 (defn- hello-world [request]
   {:status  200
@@ -30,4 +31,12 @@
                   :key-password "password"}
       (let [response (http/get "https://localhost:4348" {:insecure? true})]
         (is (= (:status response) 200))
-        (is (= (:body response) "Hello World"))))))
+        (is (= (:body response) "Hello World")))))
+
+  (testing "configurator"
+    (let [max-threads 20
+          threadPool (QueuedThreadPool. ({} :max-threads max-threads))
+          configurator (fn [server] (.setThreadPool server threadPool))
+          server (run-jetty hello-world {:join? false :port 4347 :configurator configurator})]
+      (is (= (.getMaxThreads (.getThreadPool server)) max-threads))
+      (.stop server))))
