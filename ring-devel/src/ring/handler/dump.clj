@@ -3,6 +3,7 @@
   (:use hiccup.core
         hiccup.page
         hiccup.def
+        ring.util.resource
         ring.util.response)
   (:require [clojure.set :as set]
             [clojure.pprint :as pprint]))
