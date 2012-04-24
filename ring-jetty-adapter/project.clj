@@ -1,4 +1,4 @@
-(defproject ring/ring-jetty-adapter "1.0.2"
+(defproject ring/ring-jetty-adapter-with-context "1.0.2"
   :description "Ring Jetty adapter."
   :url "http://github.com/mmcgrana/ring"
   :dependencies [[ring/ring-core "1.0.2"]

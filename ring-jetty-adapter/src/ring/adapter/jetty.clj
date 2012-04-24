@@ -1,6 +1,6 @@
 (ns ring.adapter.jetty
   "Adapter for the Jetty webserver."
-  (:import (org.mortbay.jetty.handler AbstractHandler)
+  (:import (org.mortbay.jetty.handler AbstractHandler ContextHandler)
            (org.mortbay.jetty Server Request Response)
            (org.mortbay.jetty.bio SocketConnector)
            (org.mortbay.jetty.security SslSocketConnector)
@@ -59,13 +59,18 @@
   :keystore     - the keystore to use for SSL connections
   :key-password - the password to the keystore
   :truststore   - a truststore to use for SSL connections
-  :trust-password - the password to the truststore"
+  :trust-password - the password to the truststore
+  :context - context ex. /hello "
   [handler options]
   (let [^Server s (create-server (dissoc options :configurator))]
     (when-let [configurator (:configurator options)]
       (configurator s))
     (doto s
-      (.addHandler (proxy-handler handler))
+      (.addHandler (if (:context options)  
+                     (doto (ContextHandler. )
+                       (.setContextPath (:context options))
+                       (.setHandler (proxy-handler handler))) 
+                     (proxy-handler handler)))
       (.start))
     (when (:join? options true)
       (.join s))
