@@ -1,7 +1,7 @@
 (ns ring.adapter.jetty
   "Adapter for the Jetty webserver."
   (:import (org.eclipse.jetty.server Server Request)
-           (org.eclipse.jetty.server.handler AbstractHandler)
+           (org.eclipse.jetty.server.handler AbstractHandler ContextHandler)
            (org.eclipse.jetty.server.nio SelectChannelConnector)
            (org.eclipse.jetty.server.ssl SslSelectChannelConnector)
            (org.eclipse.jetty.util.thread QueuedThreadPool)
@@ -74,11 +74,16 @@
   :trust-password - the password to the truststore
   :max-threads  - the maximum number of threads to use (default 50)
   :client-auth  - SSL client certificate authenticate, may be set to :need,
-                  :want or :none (defaults to :none)"
+                  :want or :none (defaults to :none)
+  :context - context ex. /hello "
   [handler options]
   (let [^Server s (create-server (dissoc options :configurator))]
     (doto s
-      (.setHandler (proxy-handler handler))
+      (.setHandler (if (:context options)  
+                     (doto (ContextHandler. )
+                       (.setContextPath (:context options))
+                       (.setHandler (proxy-handler handler))) 
+                     (proxy-handler handler)))
       (.setThreadPool (QueuedThreadPool. (options :max-threads 50))))
     (when-let [configurator (:configurator options)]
       (configurator s))
