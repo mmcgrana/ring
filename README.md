@@ -27,7 +27,7 @@ the following to your `:dependencies`:
 
 To include all of them:
 
-    [ring "1.1.0"]
+    [ring/ring "1.1.0"]
 
 ## Documentation
 
