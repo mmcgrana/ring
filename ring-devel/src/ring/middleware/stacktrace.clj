@@ -13,7 +13,7 @@
   (fn [request]
     (try
       (handler request)
-      (catch Exception ex
+      (catch Throwable ex
         (let [msg (str "Exception: " (pst-str ex))]
           (.println *err* msg)
           (throw ex))))))
@@ -77,7 +77,7 @@
   (fn [request]
     (try
       (handler request)
-      (catch Exception ex
+      (catch Throwable ex
         (ex-response request ex)))))
 
 (defn wrap-stacktrace
