@@ -151,7 +151,7 @@
   :max-age   - the maximum age in seconds of the cookie
   :expires   - a date string at which the cookie will expire
   :secure    - set to true if the cookie is valid for HTTPS only
-  :http-only - set to true if the cookie is valid for HTTP only"
+  :http-only - set to true to prevent client side script access to cookie"
   [handler]
   (fn [request]
     (let [request (if (request :cookies)
